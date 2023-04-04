@@ -1,0 +1,112 @@
+<div class="container p-5" *ngIf="visibilidadeTabela">
+    <div class="border boder-light rounded p-5">
+      <div>
+        <button type="button" class="btn btn-sm btn-secondary" (click)="ExibirFormularioCadastro()">
+          Novo Cliente
+        </button>
+      </div>
+  
+      <hr />
+
+      <div class="form-group mb-4">
+        <input class="form-control" type="text" [(ngModel)]="searchText" placeholder="Search">
+      </div>
+  
+      <table class="table table-striped table-hover table-sm" *ngIf="clientes | filter: searchText">
+        <tr class="thead-light">
+          <th>Nome</th>
+          <th>Contao</th>
+          <th>CNPJ</th>
+          <th>Categoria</th>
+          <th>Ações</th>
+        </tr>
+  
+        <tr *ngFor="let cliente of clientes | filter: searchText">
+          <td>{{ cliente.nome }}</td>
+          <td>{{ cliente.nome_contato }}</td>
+          <td>{{ cliente.cnpj }}</td>
+          <td>{{ cliente.categoria }}</td>
+          <td>
+            <button type="button" class="btn btn-sm btn-outline-info" (click)="ExibirFormularioAtualizacao(cliente.id)">
+              Atualizar</button
+            > |
+            <button type="button" class="btn btn-sm btn-outline-danger" (click)="ExibirConfirmacaoExclusao(cliente.id, cliente.nome, conteudoModal)">
+              Excluir
+            </button>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  
+  <div class="container p-5" *ngIf="visibilidadeFormulario">
+    <div class="row">
+      <div class="col-6 border boder-light rounded p-5 shadow" *ngIf="formulario">
+        <h6>{{ tituloFormulario }}</h6>
+        <hr />
+  
+        <form [formGroup]="formulario" (ngSubmit)="EnviarFormulario()">
+          <div class="form-group">
+            <label>Nome</label>
+            <input
+              type="text"
+              class="form-control form-control-sm"
+              formControlName="nome"
+              required
+            />
+          </div>
+  
+          <div class="form-group">
+            <label>Nome do Contato</label>
+            <input
+              type="text"
+              class="form-control form-control-sm"
+              formControlName="nome_contato"
+              required
+            />
+          </div>
+  
+          <div class="form-group">
+            <label>CNPJ</label>
+            <input
+              type="text"
+              class="form-control form-control-sm"
+              formControlName="cnpj"               
+              maxlength="14"
+              pattern="^[0-9]+\.[0-9][0-9]$"
+            />
+          </div>
+          
+          <div class="container">
+            <div class="row">
+              <div>
+                <button type="submit" class="btn btn-sm btn-outline-secondary">
+                  Salvar
+                </button>
+              </div>
+              <div class="pl-1">
+                <button type="button" class="btn btn-sm btn-light" (click)="Voltar()">Voltar</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <ng-template #conteudoModal>
+      <div class="modal-header">
+        <h4 class="modal-title pull-left">Confirmação de Exclusão</h4>
+        <button type="button" class="close pull-right" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Prosseguir com a exclusão do(a) {{nomeCliente}}
+      </div>
+  
+      <div class="modal-footer">
+          <button type="button" class="btn btn-light">Não</button>
+          <button type="button" class="btn btn-outline-danger" (click)="ExcluirCliente(id)">Sim</button>
+      </div>
+    </ng-template>
